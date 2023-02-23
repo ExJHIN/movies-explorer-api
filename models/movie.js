@@ -6,7 +6,6 @@ const movieSchema = new mongoose.Schema({
   country: {
     type: String,
     required: true,
-    minlength: 2,
   },
   director: {
     type: String,
@@ -56,17 +55,14 @@ const movieSchema = new mongoose.Schema({
   movieId: {
     type: Number,
     required: true,
-    minlength: 1,
   },
   nameRU: {
     type: String,
     required: true,
-    minlength: 1,
   },
   nameEN: {
     type: String,
     required: true,
-    minlength: 1,
   },
 });
 

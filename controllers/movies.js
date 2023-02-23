@@ -52,10 +52,12 @@ const deleteMovie = (req, res, next) => {
   Movies.findById(req.params.movieId)
     .then((movie) => {
       const userId = req.user._id;
-      const ownerMovieId = movie ? movie.owner.toString() : null;
+
       if (movie === null) {
         return next(new NotFoundError('Фильм с указанным _id не найден.'));
       }
+
+      const ownerMovieId = movie ? movie.owner.toString() : null;
 
       if (userId !== ownerMovieId) {
         return next(new ForbiddenError('Данная фильм пренодлежит другому пользователю'));

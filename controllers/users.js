@@ -5,6 +5,7 @@ const User = require('../models/user');
 const {
   OK,
   CREATED,
+  NOT_FOUND_USER,
 } = require('../constants');
 
 const NotFoundError = require('../errors/notFoundError');
@@ -18,15 +19,16 @@ const { JWT_SECRET } = require('../middlewares/auth');
 const login = (req, res, next) => {
   const { email, password } = req.body;
   return User.findUserByCredentials(email, password)
+    .orFail(() => {
+      throw next(new AuthorizationError(NOT_FOUND_USER));
+    })
     .then((user) => {
       // Проверяем пароль в зашифрованном виде
       bcrypt.compare(password, user.password);
       const token = jwt.sign({ _id: user.id }, JWT_SECRET, { expiresIn: '7d' });
       res.send({ token });
     })
-    .catch(() => {
-      next(new AuthorizationError('Необходима авторизация'));
-    });
+    .catch(next);
 };
 
 // Создаем пользователя
