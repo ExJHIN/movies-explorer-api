@@ -2,31 +2,28 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 
+const { NODE_ENV, JWT_SECRET } = require('../middlewares/auth');
+const { JWT_SECRET_DEVELOP } = require('../constants');
+
 const {
   OK,
   CREATED,
-  NOT_FOUND_USER,
 } = require('../constants');
 
 const NotFoundError = require('../errors/notFoundError');
 const BadRequestError = require('../errors/badRequestError');
 const ConflictError = require('../errors/conflictError');
-const AuthorizationError = require('../errors/authorizationError');
-
-const { JWT_SECRET } = require('../middlewares/auth');
 
 // Контроллер login
 const login = (req, res, next) => {
   const { email, password } = req.body;
   return User.findUserByCredentials(email, password)
-    .orFail(() => {
-      throw next(new AuthorizationError(NOT_FOUND_USER));
-    })
     .then((user) => {
       // Проверяем пароль в зашифрованном виде
+      const token = jwt.sign({ _id: user.id }, NODE_ENV === 'production' ? JWT_SECRET : JWT_SECRET_DEVELOP, { expiresIn: '7d' });
+
       bcrypt.compare(password, user.password);
-      const token = jwt.sign({ _id: user.id }, JWT_SECRET, { expiresIn: '7d' });
-      res.send({ token });
+      res.status(OK).send({ token });
     })
     .catch(next);
 };
