@@ -66,7 +66,6 @@ const gettingUserInfo = (req, res, next) => {
     .then((user) => {
       const userData = {
         name: user.name,
-        _id: user._id,
         email: user.email,
       };
       res.status(OK).send(userData);

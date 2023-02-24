@@ -10,33 +10,8 @@ const ForbiddenError = require('../errors/Forbidden');
 
 // Создание фильма
 const createMovie = (req, res, next) => {
-  const {
-    country,
-    director,
-    duration,
-    year,
-    description,
-    image,
-    trailerLink,
-    thumbnail,
-    movieId,
-    nameRU,
-    nameEN,
-  } = req.body;
-
   Movies.create({
-    owner: req.user._id,
-    country,
-    director,
-    duration,
-    year,
-    description,
-    image,
-    trailerLink,
-    thumbnail,
-    movieId,
-    nameRU,
-    nameEN,
+    ...req.body, owner: req.user._id,
   })
     .then((newMovie) => res.status(OK).send(newMovie))
     .catch((err) => {
