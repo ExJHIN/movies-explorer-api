@@ -21,9 +21,8 @@ const login = (req, res, next) => {
     .then((user) => {
       // Проверяем пароль в зашифрованном виде
       const token = jwt.sign({ _id: user.id }, NODE_ENV === 'production' ? JWT_SECRET : JWT_SECRET_DEVELOP, { expiresIn: '7d' });
-
       bcrypt.compare(password, user.password);
-      res.status(OK).send({ token });
+      return res.status(OK).send({ token });
     })
     .catch(next);
 };

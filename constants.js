@@ -18,6 +18,10 @@ const allowedCors = [
 ];
 
 module.exports = {
+  TOKEN_JWT: process.env.NODE_ENV === 'production' ? process.env.JWT_SECRET : process.env.JWT_SECRET_DEVELOP,
+};
+
+module.exports = {
   OK,
   CREATED,
   NOT_FOUND_USER,
