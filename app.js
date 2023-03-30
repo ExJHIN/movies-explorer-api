@@ -58,7 +58,7 @@ app.use('*', (req, res, next) => {
   return next();
 });
 
-app.use(index);
+app.use('/api', index);
 
 app.get('/crash-test', () => {
   setTimeout(() => {
